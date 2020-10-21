@@ -1,16 +1,17 @@
     const keyboard = document.createElement('div');
     const keyboard_keys = document.createElement('div');
     const textArea = document.getElementById('value');
+    const createIcon = (icon_name)=>{
+        return `<i class="material-icons">${icon_name}</i>`;
+    }
     let caps = false;
 
     // create elements;
 keyboard.classList.add('keyboard', 'keyboard-hidden');
 keyboard_keys.classList.add('keyboard_keys');
 
-// add to DOM
-document.body.appendChild(keyboard);
-keyboard.appendChild(keyboard_keys);
-keyboard_keys.appendChild(createElement());
+
+
     // create keyLayout
 function createElement(){
     const fragment = document.createDocumentFragment();
@@ -21,13 +22,9 @@ function createElement(){
     "done", "z", "x", "c", "v", "b", "n", "m", ",", ".", "?",
     "space"
 ];
-    const createIcon = (icon_name)=>{
-        return `<i class="material-icons">${icon_name}</i>`;
-    }
-
     keyLayout.forEach(key => {
         const keyElement = document.createElement('button');
-        const insertLineBreak = ["backspace", "p", "enter", "?"].indexOf(key) !== -1;
+        const isLineBreak = ["backspace", "p", "enter", "?"].indexOf(key) !== -1; ///includes
         keyElement.setAttribute('type', 'button');
         keyElement.classList.add('keyboard_key');
             switch(key){
@@ -74,12 +71,16 @@ function createElement(){
                 })
             }
         fragment.appendChild(keyElement);
-        if (insertLineBreak) {
+        if (isLineBreak) { //here
             fragment.appendChild(document.createElement("br"));
         }
     })
     return fragment;
 }
+// add to DOM
+keyboard_keys.appendChild(createElement());
+keyboard.appendChild(keyboard_keys);
+document.body.appendChild(keyboard);
 
 function close(){keyboard.classList.add('keyboard-hidden');}
 
