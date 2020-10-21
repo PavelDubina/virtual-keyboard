@@ -4,27 +4,38 @@
     const createIcon = (icon_name)=>{
         return `<i class="material-icons">${icon_name}</i>`;
     }
-    let caps = false;
+    const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+    const keyLayout = [
+        ...numbers, "backspace",
+    "Lang", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "\[", "\]",
+    "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "\'", "enter",
+    "done", "z", "x", "c", "v", "b", "n", "m", ",", ".","\(","\)","?",
+    "space"
+    ]
+    const en = [
+        ...numbers, 
+     "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "\[", "\]",
+     "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "\'", 
+     "z", "x", "c", "v", "b", "n", "m", ",", ".","\(","\)","?",
+    ]
+    const ru = [
+        ...numbers, 
+     'й','ц','у','к','е','н','г','ш','щ','з','х','ъ',
+     'ф','ы','в','а','п','р','о','л','д','ж','э',
+     'я','ч','с','м','и','т','ь','б','ю',',','.',"?",
+    ]
 
+    let caps = false;
+    let lang = false;
     // create elements;
 keyboard.classList.add('keyboard', 'keyboard-hidden');
 keyboard_keys.classList.add('keyboard_keys');
 
-
-
     // create keyLayout
 function createElement(){
     const fragment = document.createDocumentFragment();
-    const keyLayout = [
-    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace",
-    "q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
-    "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", "enter",
-    "done", "z", "x", "c", "v", "b", "n", "m", ",", ".", "?",
-    "space"
-];
     keyLayout.forEach(key => {
         const keyElement = document.createElement('button');
-        const isLineBreak = ["backspace", "p", "enter", "?"].indexOf(key) !== -1; ///includes
         keyElement.setAttribute('type', 'button');
         keyElement.classList.add('keyboard_key');
             switch(key){
@@ -63,24 +74,33 @@ function createElement(){
                     textArea.value += ' ';  
                 })
                 break;
-                default:
+                case 'Lang':   
+                keyElement.classList.add('keyboard_key-dark');
+                keyElement.innerHTML = createIcon("cached"); 
+                keyElement.addEventListener('click', ()=> {
+                    lang = !lang
+                    updateLanguage()  
+                });
+                break;
+                default: 
                 keyElement.classList.add('getCaps');
                 keyElement.textContent = key;
                 keyElement.addEventListener('click', ()=>{
-                    textArea.value += keyElement.textContent;  
-                })
+                    textArea.value += keyElement.textContent;
+                })  
             }
         fragment.appendChild(keyElement);
-        if (isLineBreak) { //here
+        if (["backspace","\]" , "enter", "?"].includes(key)) { 
             fragment.appendChild(document.createElement("br"));
         }
     })
     return fragment;
 }
-// add to DOM
+
+
 keyboard_keys.appendChild(createElement());
 keyboard.appendChild(keyboard_keys);
-document.body.appendChild(keyboard);
+document.body.appendChild(keyboard);    
 
 function close(){keyboard.classList.add('keyboard-hidden');}
 
@@ -92,5 +112,13 @@ function updateCaps(){
         key.textContent = !caps?key.textContent.toLowerCase():key.textContent.toUpperCase();
     })
 }
+function updateLanguage(){
+    const keys = document.querySelectorAll('.getCaps');
+    let i = 0;
+    keys.forEach(key => {
+        key.textContent = !lang?(!caps?en[i].toLowerCase():en[i].toUpperCase()):(!caps?ru[i].toLowerCase():ru[i].toUpperCase());
+        i++;
+    })
+}
 
-value.addEventListener('focus', open);
+textArea.addEventListener('focus', open);
