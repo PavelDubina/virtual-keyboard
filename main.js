@@ -75,7 +75,7 @@ function createElement(){
                 })
                 break;
                 case 'Lang':   
-                keyElement.classList.add('keyboard_key-dark');
+                keyElement.classList.add('keyboard_key-dark',"keyboard_key-wide");
                 keyElement.innerHTML = createIcon("cached"); 
                 keyElement.addEventListener('click', ()=> {
                     lang = !lang
